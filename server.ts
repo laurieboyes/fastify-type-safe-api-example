@@ -1,4 +1,5 @@
 import fastify from 'fastify';
+import fastifyOas from 'fastify-oas';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import { Static, Type } from '@sinclair/typebox';
 
@@ -23,8 +24,17 @@ const responseSchema = {
     thingId: Type.String({ example: 'abc' }),
   }),
 };
-
 type ResponseBody = Static<typeof responseSchema['200']>;
+
+app.register(fastifyOas, {
+  swagger: {
+    info: {
+      title: 'My cool API',
+      version: '1.0.0',
+    },
+  },
+  exposeRoute: true,
+});
 
 app.post(
   '/things',
