@@ -1,5 +1,6 @@
 import fastify from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
+import { Static, Type } from '@sinclair/typebox';
 
 const app: fastify.FastifyInstance<
   Server,
@@ -7,9 +8,42 @@ const app: fastify.FastifyInstance<
   ServerResponse
 > = fastify({ logger: true });
 
-app.get('/', async (request, reply) => {
-  return { hello: 'world' };
+const requestBodySchema = Type.Object({
+  name: Type.String({
+    example: 'My cool thing',
+    description: 'The name of the thing',
+  }),
+  count: Type.Number({ example: 123 }),
+  coolEnough: Type.Optional(Type.Boolean()),
 });
+type RequestBody = Static<typeof requestBodySchema>;
+
+const responseSchema = {
+  200: Type.Object({
+    thingId: Type.String({ example: 'abc' }),
+  }),
+};
+
+type ResponseBody = Static<typeof responseSchema['200']>;
+
+app.post(
+  '/things',
+  {
+    schema: {
+      body: requestBodySchema,
+      response: responseSchema,
+    },
+  },
+  async (request): Promise<ResponseBody> => {
+    const requestBody: RequestBody = request.body;
+
+    app.log.info(`Get a request to add a thing called ${requestBody.name}`);
+
+    // TODO do something with thing
+
+    return { thingId: 'xyz' };
+  }
+);
 
 const start = async () => {
   try {
