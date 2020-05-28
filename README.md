@@ -1,6 +1,6 @@
 # Fastify type-safe API example
 
-A demonstration of how to marry [fastify](https://www.fastify.io/), [TypeBox](https://github.com/sinclairzx81/typebox) and [fastify-oas](https://github.com/SkeLLLa/fastify-oas) to create an API that has type safety spanning it’s route handling code, request validation, and API documentation.
+A demonstration of how to marry [fastify](https://www.fastify.io/), [TypeBox](https://github.com/sinclairzx81/typebox) and [fastify-oas](https://github.com/SkeLLLa/fastify-oas) to create an API that has type safety spanning its route handling code, request validation, and API documentation.
 
 ## Give it a spin
 
