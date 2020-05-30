@@ -1,13 +1,12 @@
-import fastify from 'fastify';
+import fastify, { FastifyRequest } from 'fastify';
 import fastifyOas from 'fastify-oas';
-import { IncomingMessage, Server, ServerResponse } from 'http';
 import { Static, Type } from '@sinclair/typebox';
+import { builtinModules } from 'module';
 
-const app: fastify.FastifyInstance<
-  Server,
-  IncomingMessage,
-  ServerResponse
-> = fastify({ logger: true });
+const app = fastify({ logger: true });
+
+//
+// Defining our route schemas
 
 const requestBodySchema = Type.Object({
   name: Type.String({
@@ -26,6 +25,9 @@ const responseSchema = {
 };
 type ResponseBody = Static<typeof responseSchema['200']>;
 
+//
+// Registering our documentation plugin
+
 app.register(fastifyOas, {
   swagger: {
     info: {
@@ -36,6 +38,8 @@ app.register(fastifyOas, {
   exposeRoute: true,
 });
 
+//
+// Configuring our route, adding route handler code
 app.post(
   '/things',
   {
@@ -44,25 +48,12 @@ app.post(
       response: responseSchema,
     },
   },
-  async (request): Promise<ResponseBody> => {
-    const requestBody: RequestBody = request.body;
-
-    app.log.info(`Get a request to add a thing called ${requestBody.name}`);
-
-    // TODO do something with thing
-
+  async (
+    request: Omit<FastifyRequest, 'body'> & { body: RequestBody }
+  ): Promise<ResponseBody> => {
+    app.log.info(`Received request to add a thing called ${request.body.name}`);
     return { thingId: 'xyz' };
   }
 );
 
-const start = async () => {
-  try {
-    const port = 3000;
-    await app.listen(port);
-    app.log.info(`server listening on ${port}`);
-  } catch (err) {
-    app.log.error(err);
-    process.exit(1);
-  }
-};
-start();
+app.listen(3000).then(() => app.log.info(`server listening on 3000`));
