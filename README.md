@@ -2,6 +2,8 @@
 
 A demonstration of how to marry [fastify](https://www.fastify.io/), [TypeBox](https://github.com/sinclairzx81/typebox) and [fastify-oas](https://github.com/SkeLLLa/fastify-oas) to create an API that has type safety spanning its route handling code, request validation, and API documentation.
 
+For context, take a look at my blog: [Living the type-safe, well-documented REST API dream with TypeScript + Fastify](https://tech.ovoenergy.com/living-the-type-safe-well-documented-rest-api-dream-with-typescript-fastify/)
+
 ## Give it a spin
 
 Get started with
